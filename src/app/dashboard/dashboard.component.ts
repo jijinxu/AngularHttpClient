@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
   taskService: TaskService = inject(TaskService);
 
   editMode: boolean = false;
+  currentTaskid: string;
 
   OpenCreateTaskForm() {
     this.showCreateTaskForm = true;
@@ -40,8 +41,12 @@ export class DashboardComponent implements OnInit {
     this.showCreateTaskForm = false;
   }
 
-  CreateTask(data: Task) {
-    this.taskService.CreateTask(data);
+  CreateOrUpdateTask(data: Task) {
+    if (!this.editMode) {
+      this.taskService.CreateTask(data);
+    } else {
+      this.taskService.UpdateTask(this.currentTaskid, data);
+    }
   }
 
   FetchAllTaskClicked() {
@@ -69,7 +74,7 @@ export class DashboardComponent implements OnInit {
   UpdateTask(id: string) {
     this.showCreateTaskForm = true;
     this.editMode = true;
-
+    this.currentTaskid = id;
     console.log(id);
     console.log(this.allTasks);
     this.selectedTask = this.allTasks.find((curtask) => {

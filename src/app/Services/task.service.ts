@@ -63,4 +63,8 @@ export class TaskService {
         })
       );
   }
+
+  UpdateTask(id: string, data: Task) {
+    this.http.put(this.url + "/tasks/" + id + ".json", data).subscribe();
+  }
 }
