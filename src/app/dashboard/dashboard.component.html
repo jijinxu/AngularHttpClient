@@ -41,7 +41,11 @@
         <button class="task-action-btn" title="Edit">
           <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
         </button>
-        <button class="task-action-btn" title="Delete">
+        <button
+          class="task-action-btn"
+          title="Delete"
+          (click)="DeleteTask(task.id)"
+        >
           <i class="fa fa-trash" aria-hidden="true"></i>
         </button>
       </div>

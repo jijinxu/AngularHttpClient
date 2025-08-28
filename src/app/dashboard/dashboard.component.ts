@@ -64,4 +64,18 @@ export class DashboardComponent implements OnInit {
         this.allTasks = tasks;
       });
   }
+
+  //delete a single task
+  DeleteTask(id: string) {
+    console.log("delete " + id);
+    this.http
+      .delete(
+        "https://angularhttpclient-ki-default-rtdb.firebaseio.com/tasks/" +
+          id +
+          ".json"
+      )
+      .subscribe((response) => {
+        console.log(response);
+      });
+  }
 }
