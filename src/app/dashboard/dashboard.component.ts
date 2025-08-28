@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from "@angular/core";
 import { Task } from "../Model/Task";
 import { HttpClient } from "@angular/common/http";
 import { map } from "rxjs/operators";
+import { TaskService } from "../Services/task.service";
 
 @Component({
   selector: "app-dashboard",
@@ -13,9 +14,9 @@ export class DashboardComponent implements OnInit {
 
   http: HttpClient = inject(HttpClient);
 
-  url: string = "https://angularhttpclient-ki-default-rtdb.firebaseio.com";
-
   allTasks: Task[] = [];
+
+  taskService: TaskService = inject(TaskService);
 
   OpenCreateTaskForm() {
     this.showCreateTaskForm = true;
@@ -26,15 +27,7 @@ export class DashboardComponent implements OnInit {
   }
 
   CreateTask(data: Task) {
-    console.log(data);
-    this.http
-      .post<{ name: string }>(this.url + "/tasks.json", data, {
-        headers: { "my-header": "hello-world" },
-      })
-      .subscribe((response) => {
-        // console.log(response);
-        // this.fetchAllTask();
-      });
+    this.taskService.CreateTask(data);
   }
 
   FetchAllTaskClicked() {
@@ -44,38 +37,18 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.fetchAllTask();
   }
-  private fetchAllTask() {
-    this.http
-      .get<{ [key: string]: Task }>(this.url + "/tasks.json", {
-        headers: { myhhh: "aaa" },
-      })
-      .pipe(
-        map((response) => {
-          let tasks = [];
-          for (let key in response) {
-            if (response.hasOwnProperty(key)) {
-              tasks.push({ ...response[key], id: key });
-            }
-          }
-          return tasks;
-        })
-      )
-      .subscribe((tasks) => {
-        this.allTasks = tasks;
-      });
-  }
 
+  fetchAllTask() {
+    this.taskService.getAllTask().subscribe((tasks) => {
+      this.allTasks = tasks;
+    });
+  }
   //delete a single task
   DeleteTask(id: string) {
-    console.log("delete " + id);
-    this.http
-      .delete(
-        "https://angularhttpclient-ki-default-rtdb.firebaseio.com/tasks/" +
-          id +
-          ".json"
-      )
-      .subscribe((response) => {
-        console.log(response);
-      });
+    this.taskService.DeleteTask(id);
+  }
+
+  DeleteAllTasks() {
+    this.taskService.DeleteAllTasks();
   }
 }
