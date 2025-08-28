@@ -23,6 +23,8 @@ export class DashboardComponent implements OnInit {
   editMode: boolean = false;
   currentTaskid: string;
 
+  isLoading: boolean = false;
+
   OpenCreateTaskForm() {
     this.showCreateTaskForm = true;
     this.editMode = false;
@@ -58,8 +60,10 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchAllTask() {
+    this.isLoading = true;
     this.taskService.getAllTask().subscribe((tasks) => {
       this.allTasks = tasks;
+      this.isLoading = false;
     });
   }
   //delete a single task
