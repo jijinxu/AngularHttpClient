@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from "@angular/core";
 import { Task } from "../Model/Task";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { map } from "rxjs/operators";
 import { TaskService } from "../Services/task.service";
 
@@ -24,6 +24,8 @@ export class DashboardComponent implements OnInit {
   currentTaskid: string;
 
   isLoading: boolean = false;
+
+  errorMessage: string = null;
 
   OpenCreateTaskForm() {
     this.showCreateTaskForm = true;
@@ -61,9 +63,27 @@ export class DashboardComponent implements OnInit {
 
   fetchAllTask() {
     this.isLoading = true;
-    this.taskService.getAllTask().subscribe((tasks) => {
-      this.allTasks = tasks;
-      this.isLoading = false;
+    // this.taskService.getAllTask().subscribe(
+    //   (tasks) => {
+    //     this.allTasks = tasks;
+    //     this.isLoading = false;
+    //   },
+    //   (error) => {
+    //     console.log("aaa", error.error);
+    //   }
+    // );
+    this.taskService.getAllTask().subscribe({
+      next: (tasks) => {
+        this.allTasks = tasks;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.setErrorMessage(error);
+        this.isLoading = false;
+        setTimeout(() => {
+          this.errorMessage = null;
+        }, 3000);
+      },
     });
   }
   //delete a single task
@@ -85,5 +105,11 @@ export class DashboardComponent implements OnInit {
       return curtask.id === id;
     });
     console.log(this.selectedTask);
+  }
+
+  private setErrorMessage(err: HttpErrorResponse) {
+    if (err.error.error === "Permission denied") {
+      this.errorMessage = "you have no permission to perform this action.";
+    }
   }
 }
