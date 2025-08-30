@@ -30,6 +30,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   errSub: Subscription;
 
+  showTaskDetails: boolean = false;
+
+  currentGetTask: any;
   OpenCreateTaskForm() {
     this.showCreateTaskForm = true;
     this.editMode = false;
@@ -124,5 +127,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.errorMessage = null;
     }, 3000);
+  }
+
+  showCurrentTaskDetails(id: string) {
+    this.showTaskDetails = true;
+    this.taskService.getTaskDetail(id).subscribe({
+      next: (data) => {
+        this.currentGetTask = data;
+        console.log("aaa");
+        console.log(data);
+      },
+    });
+  }
+
+  OnCloseDetailView(event) {
+    console.log(event);
+    this.showTaskDetails = event;
   }
 }

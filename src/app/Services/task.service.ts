@@ -10,7 +10,7 @@ import { LoggingService } from "./logging.service";
 })
 export class TaskService {
   http: HttpClient = inject(HttpClient);
-  url: string = "https://angularhttpclientssss-ki-default-rtdb.firebaseio.com";
+  url: string = "https://angularhttpclient-ki-default-rtdb.firebaseio.com";
 
   errorSubject = new Subject<HttpErrorResponse>();
 
@@ -117,6 +117,21 @@ export class TaskService {
           };
           this.loggingService.logError(errorObj);
           return throwError(() => err);
+        })
+      );
+  }
+
+  getTaskDetail(id: string) {
+    return this.http
+      .get(
+        "https://angularhttpclient-ki-default-rtdb.firebaseio.com/tasks/" +
+          id +
+          ".json"
+      )
+      .pipe(
+        map((response) => {
+          let task = { ...response, id: id };
+          return task;
         })
       );
   }
