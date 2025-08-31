@@ -117,11 +117,13 @@ export class TaskService {
         {
           headers: myheaders,
           params: queryParam,
+          observe: "body",
         }
       )
       .pipe(
         map((response) => {
           let tasks = [];
+          console.log(response);
           for (let key in response) {
             if (response.hasOwnProperty(key)) {
               tasks.push({ ...response[key], id: key });
