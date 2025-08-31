@@ -2,6 +2,7 @@ import {
   HttpClient,
   HttpErrorResponse,
   HttpHeaders,
+  HttpParams,
 } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Task } from "../Model/Task";
@@ -106,11 +107,16 @@ export class TaskService {
     myheaders = myheaders.append("myhhh1", "helloworld2");
     myheaders = myheaders.set("Access-Control-Allow-Origin", "*");
 
+    let queryParam: HttpParams = new HttpParams();
+    queryParam = queryParam.set("page", 2);
+    queryParam = queryParam.set("item", 10);
+
     return this.http
       .get<{ [key: string]: Task }>(
         "https://angularhttpclient-ki-default-rtdb.firebaseio.com/tasks.json",
         {
           headers: myheaders,
+          params: queryParam,
         }
       )
       .pipe(
