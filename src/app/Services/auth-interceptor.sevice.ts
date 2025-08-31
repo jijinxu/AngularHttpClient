@@ -3,9 +3,10 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
+  HttpEventType,
 } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 
 // @Injectable({
 //   providedIn: "root",
@@ -15,8 +16,15 @@ export class AuthInterceptorService implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    console.log("Auth Interceptor called");
-    return next.handle(req);
+    let modifiedReq = req.clone({ headers: req.headers.append("auth", "abc") });
+    return next.handle(modifiedReq).pipe(
+      tap((event) => {
+        if (event.type === HttpEventType.Response) {
+          console.log("response has arrived.data :");
+          console.log(event.body);
+        }
+      })
+    );
     //return null;
   }
 }
