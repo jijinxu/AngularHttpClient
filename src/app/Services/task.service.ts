@@ -1,4 +1,8 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Task } from "../Model/Task";
 import { catchError, map } from "rxjs/operators";
@@ -16,11 +20,16 @@ export class TaskService {
 
   loggingService: LoggingService = inject(LoggingService);
 
+  headers: HttpHeaders = new HttpHeaders({
+    myheader: "helloworld",
+    myheader2: "helloworld2",
+  });
+
   CreateTask(data: Task) {
     console.log(data);
     this.http
       .post<{ name: string }>(this.url + "/tasks.json", data, {
-        headers: { "my-header": "hello-world" },
+        headers: this.headers,
       })
       .pipe(
         catchError((err) => {
@@ -92,11 +101,16 @@ export class TaskService {
   }
 
   getAllTask() {
+    let myheaders = new HttpHeaders();
+    myheaders = myheaders.set("myhhh1", "helloworld1");
+    myheaders = myheaders.append("myhhh1", "helloworld2");
+    myheaders = myheaders.set("Access-Control-Allow-Origin", "*");
+
     return this.http
       .get<{ [key: string]: Task }>(
         "https://angularhttpclient-ki-default-rtdb.firebaseio.com/tasks.json",
         {
-          headers: { myhhh: "aaa" },
+          headers: myheaders,
         }
       )
       .pipe(
@@ -123,7 +137,7 @@ export class TaskService {
 
   getTaskDetail(id: string) {
     return this.http
-      .get(
+      .get<Task>(
         "https://angularhttpclient-ki-default-rtdb.firebaseio.com/tasks/" +
           id +
           ".json"

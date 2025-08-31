@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   showTaskDetails: boolean = false;
 
-  currentGetTask: any;
+  currentGetTask: Task;
   OpenCreateTaskForm() {
     this.showCreateTaskForm = true;
     this.editMode = false;
