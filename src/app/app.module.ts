@@ -10,6 +10,7 @@ import { FormsModule } from "@angular/forms";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { TaskDetailsComponent } from "./dashboard/task-details/task-details.component";
 import { AuthInterceptorService } from "./Services/auth-interceptor.sevice";
+import { LoggingInterceptorService } from "./Services/logging-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -25,6 +26,11 @@ import { AuthInterceptorService } from "./Services/auth-interceptor.sevice";
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoggingInterceptorService,
       multi: true,
     },
   ],
